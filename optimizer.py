@@ -1,9 +1,17 @@
 import numpy as np 
+from loss import squared_error
 
 class stochastic_gradient_descent():
-    def __init__(self, learning_rate: np.float, loss: callable):
+    """
+    learning_rate: learning rate for backpropagation
+    loss: cost function for the model
+    decay: weight for weight decay
+    """
+
+    def __init__(self, learning_rate=0.01, loss=squared_error, decay=0.0):
         self.learning_rate = learning_rate
         self.loss = loss
+        self.decay = decay
 
     def optimize(self, model, x: np.array, y: np.array):
         self.pre_activation, self.activations, self.activation_gradient = model.predict_in_train(x)
@@ -31,8 +39,10 @@ class stochastic_gradient_descent():
         for i in range(self.m):
             total_gradients[i] = np.average(partial_derivatives[i], axis=0)
 
-        new_weights = self.weights
         for i in range(self.m):
-            layers[i].set_weights(np.append(self.weights[i][: -1] - self.learning_rate * total_gradients[i], self.weights[i][-1:], axis=0))
+            error_term_ave = np.average(error_terms[i], axis=0)
+            error_term_ave.shape = (1, error_term_ave.shape[0])
+            weight_gradient = np.append(total_gradients[i], error_term_ave, axis=0)
+            layers[i].set_weights(self.weights[i] - self.learning_rate * (weight_gradient + self.decay * self.weights[i]))
                 
         return layers

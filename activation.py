@@ -1,5 +1,7 @@
 import numpy as np
 import math
+np.seterr(over='ignore')
+
 """
 Activation functions
 Inputs: x a number

@@ -5,11 +5,9 @@ from utils import batch_iterator
 
 class Sequential():
 
-    def __init__(self, optimizer=stochastic_gradient_descent, learning_rate=0.1, loss=squared_error):
+    def __init__(self, optimizer=stochastic_gradient_descent()):
         self.layers = np.array([])
-        self.optimizer = optimizer(learning_rate, loss)
-        self.learning_rate = learning_rate
-        self.loss = loss
+        self.optimizer = optimizer
 
     def add(self, layer):
         self.layers = np.append(self.layers, layer)
@@ -34,11 +32,12 @@ class Sequential():
 
     def fit(self, x_train: np.array, y_train: np.array, x_test: np.array, y_test: np.array, epochs: np.int, batch_size=16, _print=False):
         for i in range(epochs):
-            acc_train = self.binary_accuracy(x_train, y_train)
-            acc_test = self.binary_accuracy(x_test, y_test)
-            print(f'Befor epoch {i + 1}:')
-            print(f'Accuracy on train set: {acc_train} %')
-            print(f'Accuracy on test set: {acc_test} %')
+            if _print:
+                acc_train = self.binary_accuracy(x_train, y_train)
+                acc_test = self.binary_accuracy(x_test, y_test)
+                print(f'Befor epoch {i + 1}:')
+                print(f'Accuracy on train set: {round(acc_train * 100, 2)} %')
+                print(f'Accuracy on test set: {round(acc_test * 100, 2)} %')
             for x_batch, y_batch in batch_iterator(x_train, y_train, batch_size, stochastic=True):
                 self.layers = self.optimizer.optimize(self, x_batch, y_batch)
             

@@ -35,12 +35,3 @@ class Dense:
 
     def set_weights(self, weights):
         self.weights = weights
-
-    def activation(self, x):
-        return self.activation(x)
-
-
-
-    
-if __name__ == '__main__':
-    pass

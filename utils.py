@@ -13,9 +13,10 @@ class batch_iterator:
         assert(X.shape[0] == y.shape[0])
         assert(batch_size > 0)
         if stochastic:
-            rstate = np.random.RandomState(42)
+            seed = np.random.randint(1, 1000)
+            rstate = np.random.RandomState(seed)
             rstate.shuffle(X)
-            rstate = np.random.RandomState(42)
+            rstate = np.random.RandomState(seed)
             rstate.shuffle(y)
             self.X = X
             self.y = y
